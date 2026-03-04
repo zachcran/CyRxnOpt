@@ -24,9 +24,9 @@
          :alt: Twitter
          :target: https://twitter.com/cyrxnopt
 
-.. image:: https://api.cirrus-ci.com/github/RxnRover/pyoptimizer_backend.svg?branch=main
-    :alt: Built Status
-    :target: https://cirrus-ci.com/github/RxnRover/pyoptimizer_backend
+.. .. image:: https://api.cirrus-ci.com/github/RxnRover/pyoptimizer_backend.svg?branch=main
+..     :alt: Built Status
+..     :target: https://cirrus-ci.com/github/RxnRover/pyoptimizer_backend
 
 .. |Build Status| image:: https://github.com/RxnRover/CyRxnOpt/actions/workflows/unit_testing.yml/badge.svg
     :alt: Build Status
