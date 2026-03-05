@@ -1,5 +1,6 @@
 |Documentation|
 |Build Status|
+|Python Versions|
 |Generated with Pyscaffold|
 
 .. |Build Status| image:: https://github.com/RxnRover/CyRxnOpt/actions/workflows/unit_testing.yml/badge.svg
@@ -14,16 +15,14 @@
     :alt: Project generated with PyScaffold
     :target: https://pyscaffold.org/
 
+.. |Python Versions| image:: https://img.shields.io/badge/Python-3.9-blue
+    :alt: Documentation link
+    :target: https://rxnrover.github.io/CyRxnOpt/
+
 ..
     These are examples of badges you might want to add to your README:
     please update the URLs accordingly
 
-     .. image:: https://api.cirrus-ci.com/github/<USER>/cyrxnopt.svg?branch=main
-         :alt: Built Status
-         :target: https://cirrus-ci.com/github/<USER>/cyrxnopt
-     .. image:: https://readthedocs.org/projects/cyrxnopt/badge/?version=latest
-         :alt: ReadTheDocs
-         :target: https://cyrxnopt.readthedocs.io/en/stable/
      .. image:: https://img.shields.io/coveralls/github/<USER>/cyrxnopt/main.svg
          :alt: Coveralls
          :target: https://coveralls.io/r/<USER>/cyrxnopt
@@ -36,13 +35,6 @@
      .. image:: https://pepy.tech/badge/cyrxnopt/month
          :alt: Monthly Downloads
          :target: https://pepy.tech/project/cyrxnopt
-     .. image:: https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter
-         :alt: Twitter
-         :target: https://twitter.com/cyrxnopt
-
-.. .. image:: https://api.cirrus-ci.com/github/RxnRover/pyoptimizer_backend.svg?branch=main
-..     :alt: Built Status
-..     :target: https://cirrus-ci.com/github/RxnRover/pyoptimizer_backend
 
 CyRxnOpt
 ========
