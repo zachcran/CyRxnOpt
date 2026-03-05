@@ -181,22 +181,33 @@ CyRxnOpt is a Python-based library available for installation from PyPI using
  Making Changes & Contributing
 *******************************
 
-This project uses pre-commit_, please make sure to install it before making any
-changes or you will not be able to make commits!
+This project enforces formatting and style using pre-commit_ and uses tox_ for
+project automation. Please make sure to install these before making any changes.
 
 .. code-block:: bash
 
-    pip install pre-commit
+    # Clone the repo
+    git clone https://github.com/RxnRover/CyRxnOpt cyrxnopt
+
+    # Install dev prerequisites
     cd cyrxnopt
+    pip install pre-commit tox
+
+    # Install pre-commit hooks
     pre-commit install
 
-It is a good idea to update the hooks to the latest version:
+The following ease of use commands are provided via tox (run with ``tox r -e
+<command>``), and can be listed at any time using ``tox l`` in a terminal:
 
 .. code-block:: bash
 
-    pre-commit autoupdate
-
-Don't forget to tell your contributors to also install and use pre-commit.
+    build     -> Build the package in isolation according to PEP517, see https://github.com/pypa/build
+    clean     -> Remove old distribution files and temporary build artifacts (./build and ./dist)
+    docs      -> Invoke sphinx-build to build the docs
+    docformat -> Invoke docstrfmt to format the documentation
+    doctests  -> Invoke sphinx-build to run doctests
+    viewdocs  -> Build the documentation and starts a local server hosting it
+    linkcheck -> Check for broken links in the documentation
 
 *******
  Paper
@@ -222,3 +233,5 @@ information on PyScaffold see pyscaffold_.
 .. _pre-commit: https://pre-commit.com/
 
 .. _pyscaffold: https://pyscaffold.org/
+
+.. _tox: https://tox.wiki/en/latest/
