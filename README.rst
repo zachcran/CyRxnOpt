@@ -158,6 +158,9 @@ resulting in a no-op if ``train_optimizer`` is called.
 Optimizing a Function
 =====================
 
+Once trained, if necessary, the optimization loop can be run with
+``start_optimization``.
+
 .. code-block:: bash
 
     # If not already there
@@ -173,7 +176,7 @@ Optimizing a Function
 For API usage, see `API Reference
 <https://rxnrover.github.io/CyRxnOpt/api/modules.html>`__.
 
-.. _pyscaffold-notes:
+.. _contributing:
 
 *******************************
  Making Changes & Contributing
@@ -216,6 +219,8 @@ Please cite preprint as: Zachery Crandall, Dulitha P. Kulathunga, Lun An, et al.
 CyRxnOpt: Generalized Interface for Benchmarking Reaction Optimization
 Algorithms. *ChemRxiv*. 06 April 2026. DOI:
 https://doi.org/10.26434/chemrxiv.15001645/v1
+
+.. _pyscaffold-note:
 
 ******
  Note
