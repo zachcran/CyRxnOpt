@@ -141,9 +141,9 @@ Training an Optimizer
 =====================
 
 Once the optimizer is configured, if training is needed, the ``train_optimizer``
-command can be run. A default of 20 training steps are used, which can be
-changed with the ``-t`` flag. This is not needed for the NMSimplex algorithm,
-resulting in a no-op if ``train_optimizer`` is called.
+command can be run for interactive training. A default of 20 training steps are
+used, which can be changed with the ``-t`` flag. This is not needed for the
+NMSimplex algorithm, resulting in a no-op if ``train_optimizer`` is called.
 
 .. code-block:: bash
 
@@ -158,7 +158,7 @@ resulting in a no-op if ``train_optimizer`` is called.
 Optimizing a Function
 =====================
 
-Once trained, if necessary, the optimization loop can be run with
+Once trained, the interactive optimization loop can be run with
 ``start_optimization``.
 
 .. code-block:: bash
