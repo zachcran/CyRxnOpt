@@ -73,22 +73,23 @@ Further instructions can be found in `the documentation
 Installing an Optimizer
 =======================
 
-The first thing to do when using CyRxnOpt is to create an :term:`experiment
-directory`. The experiment directory will contain the optimizer installation,
-optimizer configuration files, reaction data, and other auxiliary files needed
-over the course of an optimization. By default, an instance of the optimization
-algorithm will be installed in each experiment directory to provide a snap shot
-of the software used at the time of the experiment. Sometimes these duplicate
+The first thing to do when using CyRxnOpt is to create an experiment directory.
+The experiment directory will contain the optimizer installation, optimizer
+configuration files, reaction data, and other auxiliary files needed over the
+course of an optimization. By default, an instance of the optimization algorithm
+will be installed in each experiment directory to provide a snap shot of the
+software used at the time of the experiment. Sometimes these duplicate
 installations can become too large, so it is also possible to provide an
 alternative installation location for an algorithm, provided it was put there
 using the following ``install`` command so it has the correct structure.
 
-An optimizer can be installed using the ``install`` command. Using a
-:ref:`supported optimizer name <supported_optimizer_list>`, the ``install``
-command will install the given optimization algorithm into a subdirectory to be
-used by future commands. The following command installs the Nelder-Mead Simplex
-algorithm (NMSimplex), a classic, local optimization technique applied in early
-reaction optimization studies.
+An optimizer can be installed using the ``install`` command. Using a `supported
+optimizer name
+<https://rxnrover.github.io/CyRxnOpt/supported_algorithms.html>`__, the
+``install`` command will install the given optimization algorithm into a
+subdirectory to be used by future commands. The following command installs the
+Nelder-Mead Simplex algorithm (NMSimplex), a classic, local optimization
+technique applied in early reaction optimization studies.
 
 .. code-block:: bash
 
@@ -163,19 +164,8 @@ This is where the optimizer prediction will be described.
  API Usage
 ***********
 
-For API usage, see :ref:`api_usage`.
-
-CyRxnOpt is a Python-based library available for installation from PyPI using
-``pip``:
-
-.. code-block:: bash
-
-    pip install cyrxnopt
-
-.. todo::
-
-    Can we easily make this available through conda as well? That would
-    be advantageous, but not strictly necessary.
+For API usage, see `API Reference
+<https://rxnrover.github.io/CyRxnOpt/api/modules.html>`__.
 
 .. _pyscaffold-notes:
 
