@@ -14,6 +14,10 @@
     :alt: Documentation link
     :target: https://rxnrover.github.io/CyRxnOpt/
 
+.. image:: https://img.shields.io/badge/ChemRxiv-Preprint
+    :alt: ChemRxiv Preprint DOI
+    :target: https://doi.org/10.26434/chemrxiv.15001645/v1
+
 ..
     These are examples of badges you might want to add to your README:
     please update the URLs accordingly
@@ -220,8 +224,14 @@ on differing chemical processes. To demonstrate the use and flexibility of
 CyRxnOpt, it was used to access four optimization algorithms and benchmark their
 performance on standard optimization functions and reaction models built from
 experimental datasets, providing a benchmarking framework which we plan to
-expand to more optimization algorithms. Paper link is forthcoming on
-publication.
+expand to more optimization algorithms.
+
+ChemRxiv Preprint: https://doi.org/10.26434/chemrxiv.15001645/v1
+
+Please cite preprint as: Zachery Crandall, Dulitha P. Kulathunga, Lun An, et al.
+CyRxnOpt: Generalized Interface for Benchmarking Reaction Optimization
+Algorithms. *ChemRxiv*. 06 April 2026. DOI:
+https://doi.org/10.26434/chemrxiv.15001645/v1
 
 ******
  Note
