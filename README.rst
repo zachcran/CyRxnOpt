@@ -14,7 +14,7 @@
     :alt: Documentation link
     :target: https://rxnrover.github.io/CyRxnOpt/
 
-.. image:: https://img.shields.io/badge/ChemRxiv-Preprint
+.. image:: https://img.shields.io/badge/ChemRxiv-Preprint-lightgray
     :alt: ChemRxiv Preprint DOI
     :target: https://doi.org/10.26434/chemrxiv.15001645/v1
 
