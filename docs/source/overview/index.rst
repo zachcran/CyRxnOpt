@@ -1,11 +1,12 @@
 .. _overview:
 
-Overview
-========
+##########
+ Overview
+##########
 
 .. toctree::
     :maxdepth: 2
 
-    Introduction <introduction>
+    Background <background>
     Installation <installation>
     Examples <examples/index>

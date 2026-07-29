@@ -1,7 +1,8 @@
 .. _developer_getting_started:
 
-Getting Started
-===============
+#################
+ Getting Started
+#################
 
 From beginners to experts, there is always important information that is useful
 to get you started in a new code base. This guide will help you get set up to

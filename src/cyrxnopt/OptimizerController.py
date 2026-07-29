@@ -7,6 +7,7 @@ from cyrxnopt.OptimizerABC import OptimizerABC
 from cyrxnopt.OptimizerAmlro import OptimizerAmlro
 from cyrxnopt.OptimizerEDBOp import OptimizerEDBOp
 from cyrxnopt.OptimizerNMSimplex import OptimizerNMSimplex
+from cyrxnopt.OptimizerRandom import OptimizerRandom
 from cyrxnopt.OptimizerSQSnobFit import OptimizerSQSnobFit
 
 logger = logging.getLogger(__name__)
@@ -196,6 +197,8 @@ def get_optimizer(optimizer_name: str, venv: NestedVenv) -> OptimizerABC:
         optimizer = OptimizerEDBOp(venv)
     elif optimizer_name == "nmsimplex":
         optimizer = OptimizerNMSimplex(venv)
+    elif optimizer_name == "random":
+        optimizer = OptimizerRandom(venv)
     elif optimizer_name == "sqsnobfit":
         optimizer = OptimizerSQSnobFit(venv)
     else:

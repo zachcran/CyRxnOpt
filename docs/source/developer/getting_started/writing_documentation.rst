@@ -1,7 +1,8 @@
 .. _writing_documentation:
 
-Writing Documentation
-=====================
+#######################
+ Writing Documentation
+#######################
 
 .. note::
 
@@ -18,8 +19,9 @@ generated using `Sphinx <https://www.sphinx-doc.org/en/master/>`_. If you are
 not familiar with reST, Sphinx has a good primer `here
 <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`__.
 
-Style and Formatting
---------------------
+**********************
+ Style and Formatting
+**********************
 
 Our documentation style and formatting is mainly delegated to our formatting
 tool, `docstrfmt <https://github.com/LilSpazJoekp/docstrfmt>`_. reST files will
@@ -48,8 +50,9 @@ like. The main formatting rules to keep in mind are:
 
 - Use ``-``, not ``*`` for bulleted lists
 
-Documentation Locations
------------------------
+*************************
+ Documentation Locations
+*************************
 
 The majority of our documentation is organized under ``docs/source``, although
 there are a variety of other reST files throughout the project to greet users
@@ -57,8 +60,9 @@ there are a variety of other reST files throughout the project to greet users
 information without needing to sift through documentation website
 (``AUTHORS.rst``).
 
-Testing the Documentation
--------------------------
+***************************
+ Testing the Documentation
+***************************
 
 The first step in testing the documentation should be to `build and preview it
 <viewing_documentation>`_ on your local system to make sure it builds correctly

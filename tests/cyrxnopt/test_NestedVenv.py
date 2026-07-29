@@ -303,6 +303,12 @@ def test_pip_install_r(test_venv, test_assets_path) -> None:
 
 
 @pytest.mark.individual
+@pytest.mark.skip(
+    reason=(
+        "This nestedvenv method seems to no longer "
+        "work with numpy in Python 3.9 after EOL"
+    )
+)
 def test_pip_install_numpy_first_of_two_venvs(test_venv) -> None:
     venv1 = NestedVenv(Path(str(test_venv) + "_1"))
     venv2 = NestedVenv(Path(str(test_venv) + "_2"))
@@ -326,6 +332,12 @@ def test_pip_install_numpy_first_of_two_venvs(test_venv) -> None:
 
 
 @pytest.mark.individual
+@pytest.mark.skip(
+    reason=(
+        "This nestedvenv method seems to no longer "
+        "work with numpy in Python 3.9 after EOL"
+    )
+)
 def test_pip_install_numpy_two_versions(test_venv) -> None:
     venv1 = NestedVenv(Path(str(test_venv) + "_1"))
     venv2 = NestedVenv(Path(str(test_venv) + "_2"))

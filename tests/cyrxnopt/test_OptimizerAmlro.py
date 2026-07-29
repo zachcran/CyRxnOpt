@@ -118,7 +118,7 @@ def test_predict_basic_run(venv_amlro, tmp_path, obj_func_3d):
     assert len(result_training_set) == 21
 
 
-def test__validate_config_complete_config():
+def test__validate_config_complete_config(venv_amlro):
     opt = OptimizerAmlro(venv_amlro)
 
     config = {
@@ -135,7 +135,7 @@ def test__validate_config_complete_config():
     opt._validate_config(config)
 
 
-def test__validate_config_continuous_config():
+def test__validate_config_continuous_config(venv_amlro):
     opt = OptimizerAmlro(venv_amlro)
 
     config = {
@@ -149,7 +149,7 @@ def test__validate_config_continuous_config():
     opt._validate_config(config)
 
 
-def test__validate_config_categorical_config():
+def test__validate_config_categorical_config(venv_amlro):
     opt = OptimizerAmlro(venv_amlro)
 
     config = {
@@ -162,7 +162,7 @@ def test__validate_config_categorical_config():
     opt._validate_config(config)
 
 
-def test__validate_config_missing_parts():
+def test__validate_config_missing_parts(venv_amlro):
     opt = OptimizerAmlro(venv_amlro)
 
     config_no_names = {

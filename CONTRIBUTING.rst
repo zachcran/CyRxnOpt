@@ -22,8 +22,9 @@
     also include, like mentioning labels of your issue tracker or automated
     releases.
 
-Contributing
-============
+##############
+ Contributing
+##############
 
 Welcome to ``cyrxnopt`` contributor's guide.
 
@@ -39,8 +40,9 @@ considerate, reasonable, and respectful**. When in doubt, `Python Software
 Foundation's Code of Conduct`_ is a good reference in terms of behavior
 guidelines.
 
-Issue Reports
--------------
+***************
+ Issue Reports
+***************
 
 If you experience bugs or general issues with ``cyrxnopt``, please have a look
 on the `issue tracker`_. If you don't see anything useful there, please feel
@@ -57,8 +59,9 @@ Please try also to simplify the reproduction steps to a very minimal example
 that still illustrates the problem you are facing. By removing other factors,
 you help us to identify the root cause of the issue.
 
-Documentation Improvements
---------------------------
+****************************
+ Documentation Improvements
+****************************
 
 You can help improve ``cyrxnopt`` docs by making them more readable and
 coherent, or by adding missing information and correcting mistakes.
@@ -101,8 +104,9 @@ and use Python's built-in web server for a preview in your web browser
 
     python3 -m http.server --directory 'docs/_build/html'
 
-Code Contributions
-------------------
+********************
+ Code Contributions
+********************
 
 .. todo:: Please include a reference or explanation about the internals of the project.
 
@@ -111,14 +115,14 @@ Code Contributions
     quickly.
 
 Submit an issue
-~~~~~~~~~~~~~~~
+===============
 
 Before you work on any non-trivial code contribution it's best to first create a
 report in the `issue tracker`_ to start a discussion on the subject. This often
 provides additional considerations and avoids unnecessary work.
 
 Create an environment
-~~~~~~~~~~~~~~~~~~~~~
+=====================
 
 Before you start coding, we recommend creating an isolated `virtual
 environment`_ to avoid any problems with your installed Python packages. This
@@ -137,7 +141,7 @@ or Miniconda_:
     conda activate cyrxnopt
 
 Clone the repository
-~~~~~~~~~~~~~~~~~~~~
+====================
 
 1. Create an user account on |the repository service| if you do not already have
    one.
@@ -172,7 +176,7 @@ Clone the repository
    developer to check the code being written.
 
 Implement your changes
-~~~~~~~~~~~~~~~~~~~~~~
+======================
 
 1. Create a branch to hold your changes:
 
@@ -226,7 +230,7 @@ Implement your changes
    repository. Try ``tox -av`` to see a list of the available checks.
 
 Submit your contribution
-~~~~~~~~~~~~~~~~~~~~~~~~
+========================
 
 1. If everything works fine, push your local branch to |the repository service|
    with:
@@ -245,7 +249,7 @@ Submit your contribution
        from the continuous integration (CI) system or any required fixes.
 
 Troubleshooting
-~~~~~~~~~~~~~~~
+===============
 
 The following tips can be used when facing problems to build or test the
 package:
@@ -296,11 +300,12 @@ package:
    running ``tox -- -k <NAME OF THE FALLING TEST> --pdb``). You can also setup
    breakpoints manually instead of using the ``--pdb`` option.
 
-Maintainer tasks
-----------------
+******************
+ Maintainer tasks
+******************
 
 Releases
-~~~~~~~~
+========
 
 .. todo:: This section assumes you are using PyPI to publicly release your package.
 
@@ -325,13 +330,13 @@ PyPI_, the following steps can be used to release a new version for
 6. Run ``tox -e publish -- --repository pypi`` and check that everything was
    uploaded to PyPI_ correctly.
 
-.. Even though, these resources focus on open source projects and communities,
+..
+    Even though, these resources focus on open source projects and communities,
     the general ideas behind collaborating with other developers to collectively
     create software are general and can be applied to all sorts of environments,
     including private companies and proprietary code bases.
 
-..
-    <-- strart -->
+.. <-- strart -->
 
 .. todo:: Please review and change the following definitions:
 
@@ -343,8 +348,7 @@ PyPI_, the following steps can be used to release a new version for
 
 .. _repository: https://github.com/<USERNAME>/cyrxnopt
 
-..
-    <-- end -->
+.. <-- end -->
 
 .. |virtualenv| replace:: ``virtualenv``
 

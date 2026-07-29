@@ -1,10 +1,12 @@
 .. _developer_development_environment:
 
-Development Environment
-=======================
+#########################
+ Development Environment
+#########################
 
-Getting the Code
-----------------
+******************
+ Getting the Code
+******************
 
 1. Create an user account on GitHub if you do not already have one.
 2. Fork the `CyRxnOpt repository <https://github.com/RxnRover/CyRxnOpt>`_ on
@@ -17,8 +19,9 @@ Getting the Code
        git clone git@github.com:YourLogin/cyrxnopt.git
        cd cyrxnopt
 
-Initial Setup
--------------
+***************
+ Initial Setup
+***************
 
 1. Create a virtual environment for the project installs:
 

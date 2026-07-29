@@ -1,7 +1,8 @@
 .. _add_new_optimizer:
 
-Creating a New Optimizer Class
-==============================
+################################
+ Creating a New Optimizer Class
+################################
 
 1. Make a copy of ``OptimizerTemplate.py`` and rename it as
    ``OptimizerName.py``, replacing ``Name`` with the name or an abbreviation of
@@ -86,8 +87,9 @@ Creating a New Optimizer Class
 10. Depending on your optimizer workflow, add more class methods as necessary.
     Refer to how existing optimizer classes are defined for guidance.
 
-Adding New Optimizer to CyRxnOpt
---------------------------------
+**********************************
+ Adding New Optimizer to CyRxnOpt
+**********************************
 
 After implementing your optimizer class, update the ``OptimizerController.py``
 file to use your optimizer.

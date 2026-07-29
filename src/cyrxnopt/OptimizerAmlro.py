@@ -1,5 +1,7 @@
+import json
 import logging
 import os
+import sys
 from collections.abc import Callable
 from typing import Any, Optional
 
@@ -28,6 +30,11 @@ class OptimizerAmlro(OptimizerABC):
         """
 
         super().__init__(venv)
+
+        self._full_combo_filename = "full_combo_file.txt"
+        self._training_combo_filename = "training_combo_file.txt"
+        self._training_set_filename = "training_set_file.txt"
+        self._training_set_decoded_filename = "training_set_decoded_file.txt"
 
     def get_config(self) -> list[dict[str, Any]]:
         """Gets the configuration options available for this optimizer.
@@ -70,6 +77,7 @@ class OptimizerAmlro(OptimizerABC):
                 "name": "budget",
                 "type": "int",
                 "value": 100,
+                "range": [1, sys.maxsize],
             },
             {
                 "name": "objectives",
@@ -83,11 +91,6 @@ class OptimizerAmlro(OptimizerABC):
                 "range": ["min", "max"],
             },
         ]
-        # TODO: Budget should be constrained to numbers greater than
-        #       zero once that format is solidified.
-        # TODO: Should the value of this "config" variable be moved into
-        #       a JSON file to make it easier to modify without changing
-        #       the code?
 
         return config
 
@@ -132,19 +135,21 @@ class OptimizerAmlro(OptimizerABC):
 
         full_combo_df.columns = feature_names_list
 
-        full_combo_path = os.path.join(experiment_dir, "full_combo_file.txt")
+        full_combo_path = os.path.join(
+            experiment_dir, self._full_combo_filename
+        )
         training_combo_path = os.path.join(
-            experiment_dir, "training_combo_file.txt"
+            experiment_dir, self._training_combo_filename
         )
 
         full_combo_df.to_csv(full_combo_path, index=False)
         training_combo_df.to_csv(training_combo_path, index=False)
 
         training_set_path = os.path.join(
-            experiment_dir, "training_set_file.txt"
+            experiment_dir, self._training_set_filename
         )
         training_set_decoded_path = os.path.join(
-            experiment_dir, "training_set_decoded_file.txt"
+            experiment_dir, self._training_set_decoded_filename
         )
 
         # Write the reaction conditions for training dataset into files
@@ -156,6 +161,11 @@ class OptimizerAmlro(OptimizerABC):
         with open(training_set_decoded_path, "w") as file_object:
             feature_names = ",".join([str(elem) for elem in feature_names_list])
             file_object.write(feature_names + ",Yield" + "\n")
+
+        config_path = os.path.join(experiment_dir, self._config_filename)
+
+        with open(config_path, "w") as fout:
+            json.dump(config, fout, indent=4)
 
     def train(
         self,
@@ -198,15 +208,14 @@ class OptimizerAmlro(OptimizerABC):
 
         self._import_deps()
 
-        # TODO: Set these as properties?
         training_set_path = os.path.join(
-            experiment_dir, "training_set_file.txt"
+            experiment_dir, self._training_set_filename
         )
         training_set_decoded_path = os.path.join(
-            experiment_dir, "training_set_decoded_file.txt"
+            experiment_dir, self._training_set_decoded_filename
         )
         training_combo_path = os.path.join(
-            experiment_dir, "training_combo_file.txt"
+            experiment_dir, self._training_combo_filename
         )
 
         if config["direction"].lower() == "min":
@@ -218,13 +227,6 @@ class OptimizerAmlro(OptimizerABC):
         next_index = self._get_next_training_index_by_length(
             training_combos, training_set
         )
-        # NOTE: Not used due to bug in amlo that causes training_set_file.txt
-        # to have the decoded feature headers, so training_set_file.txt and
-        # training_combo_file.txt will never have the prerequisite matching
-        # column headers.
-        # next_index = self._get_next_training_index_next_combo(
-        #     training_combos, training_set
-        # )
 
         # Exit early if all training points have already been performed
         if next_index == -1:
@@ -256,8 +258,15 @@ class OptimizerAmlro(OptimizerABC):
         experiment_dir: str,
         config: dict[str, Any],
         obj_func: Optional[Callable[..., float]] = None,
-    ) -> list[Any]:
+    ) -> Any:
         """Searches for the best parameters and records results from prior steps.
+
+        .. note::
+
+            **Behavior Note:** This method operates with a one-call-at-a-time
+            approach, not with an internal optimization loop. For a unified
+            behavioral interface, please use
+            :func:`cyrxnopt.utilities.predict_server`.
 
         :py:meth:`OptimizerAmlro.set_config` and :py:meth:`OptimizerAmlro.train`
         must be called prior to this method to generate the necessary files and
@@ -289,12 +298,14 @@ class OptimizerAmlro(OptimizerABC):
         self._import_deps()
 
         training_set_path = os.path.join(
-            experiment_dir, "training_set_file.txt"
+            experiment_dir, self._training_set_filename
         )
         training_set_decoded_path = os.path.join(
-            experiment_dir, "training_set_decoded_file.txt"
+            experiment_dir, self._training_set_decoded_filename
         )
-        full_combo_path = os.path.join(experiment_dir, "full_combo_file.txt")
+        full_combo_path = os.path.join(
+            experiment_dir, self._full_combo_filename
+        )
 
         if config["direction"].lower() == "min":
             yield_value = -yield_value
@@ -357,7 +368,6 @@ class OptimizerAmlro(OptimizerABC):
         # Get the row counts of the training combos and dataset
         combo_rows = len(training_combos.index)
         dataset_rows = len(training_dataset.index)
-        print(f"DEBUG combo_rows, dataset_rows : {combo_rows}, {dataset_rows}")
 
         # Simple check assuming the dataset only contains the training combos
         # that have been run
@@ -368,50 +378,3 @@ class OptimizerAmlro(OptimizerABC):
         # The row count of the dataset will be the next index in the combo
         # list due to zero indexing
         return dataset_rows
-
-    def _get_next_training_index_next_combo(  # type: ignore
-        self, training_combos, training_dataset
-    ) -> int:
-        """Gets the index for the next training condition to be performed.
-
-        This is implemented by checking which training conditions are missing
-        in the training dataset, then giving the index in the training condition
-        list for the first missing condition. Importantly, this means that a
-        training dataset with the correct number of entries, but none matching
-        the training combo file, will still receive indices and not be
-        considered "completed" yet.
-
-        :param training_combos: Training conditions suggested by AMLRO
-        :type training_combos: pd.DataFrame
-        :param training_dataset: Current dataset of performed reactions used to
-                                 train AMLRO
-        :type training_dataset: pd.DataFrame
-
-        :returns: Index in the training combo list of the next conditions
-                  missing from the training dataset. An index of -1 is returned
-                  if no more training conditions are missing from the dataset.
-        :rtype: int
-        """
-
-        # Merge the current training dataset with the training combos suggested
-        # by AMLRO. A left merge is used to only use keys from the training
-        # combos and preserve the row index in the training combos.
-        merged = training_combos.merge(
-            training_dataset, how="left", indicator=True
-        )
-
-        # Determine training combos are missing
-        is_missing = merged["_merge"].eq("left_only")
-
-        # The next line to get the first missing row will return 0 for both
-        # the first row and if no rows are missing, so exit early with -1
-        # if no more training combos are missing
-        if is_missing.eq(False).all():
-            return -1
-
-        # Get the index of the first training combo not found in the provided
-        # training dataset. Apparently between True and False, True is the max
-        # so idxmax() works.
-        first_missing_index = merged["_merge"].eq("left_only").idxmax()
-
-        return first_missing_index

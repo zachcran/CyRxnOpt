@@ -1,7 +1,8 @@
 .. _contributing_code:
 
-Contributing Code
-=================
+###################
+ Contributing Code
+###################
 
 .. todo::
 

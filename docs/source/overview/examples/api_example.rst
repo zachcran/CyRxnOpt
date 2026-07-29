@@ -1,7 +1,8 @@
 .. _api_example:
 
-API Example
-===========
+#############
+ API Example
+#############
 
 .. todo::
 

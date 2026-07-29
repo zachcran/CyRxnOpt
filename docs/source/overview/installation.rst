@@ -1,13 +1,15 @@
 .. _installation:
 
-Installation
-============
+##############
+ Installation
+##############
 
 To utilize the CyRxnOpt Library, follow the steps below for either pip or manual
 installation:
 
-via Pip
--------
+*********
+ via Pip
+*********
 
 1. If you have not already, it is recommended to use a virtual environment for
    your project:
@@ -35,8 +37,9 @@ via Pip
        ``requirements.txt``, ``pyproject.toml``, or ``setup.cfg`` for automatic
        installation with your project.
 
-via Source Code (Manual)
-------------------------
+**************************
+ via Source Code (Manual)
+**************************
 
 1. Clone the repository:
 

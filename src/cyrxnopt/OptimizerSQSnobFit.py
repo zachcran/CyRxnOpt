@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from collections.abc import Callable
 from typing import Any, Optional
 
@@ -35,24 +36,32 @@ class OptimizerSQSnobFit(OptimizerABC):
 
         config: list[dict[str, Any]] = [
             {
-                "name": "direction",
-                "type": "str",
-                "value": ["min", "max"],
-            },
-            {
                 "name": "continuous_feature_names",
-                "type": "list",
+                "type": "list[str]",
                 "value": [],
             },
             {
                 "name": "continuous_feature_bounds",
-                "type": "list[list]",
+                "type": "list[list[float]]",
                 "value": [[]],
+            },
+            {
+                # Not used for this algorithm, but kept for compatibility with
+                # the standard config schema
+                "name": "continuous_feature_resolutions",
+                "type": "list[float]",
+                "value": [],
             },
             {
                 "name": "budget",
                 "type": "int",
                 "value": 100,
+                "range": [1, sys.maxsize],
+            },
+            {
+                "name": "direction",
+                "type": "str",
+                "value": ["min", "max"],
             },
             {
                 "name": "param_init",
@@ -87,9 +96,14 @@ class OptimizerSQSnobFit(OptimizerABC):
 
         self._import_deps()
 
-        # TODO: config validation should be performed
+        # continuous_feature_resolution not needed for this algorithm, so ignore
+        # it and fill in with placeholder for validation
+        if "continuous_feature_resolutions" not in config:
+            config["continuous_feature_resolutions"] = 0
 
-        output_file = os.path.join(experiment_dir, "recent_config.json")
+        self._validate_config(config)
+
+        output_file = os.path.join(experiment_dir, self._config_filename)
 
         # Write the configuration to a file for later use
         with open(output_file, "w") as fout:
@@ -105,11 +119,22 @@ class OptimizerSQSnobFit(OptimizerABC):
     ) -> list[Any]:
         """No training step for this algorithm.
 
+        .. note::
+
+            **Behavior Note:** If an objective function is provided, it will be
+            called once with an empty list to indicate that training is not
+            needed.
+
         :returns: List will always be empty.
         :rtype: list[Any]
         """
-
-        return []
+        return super().train(
+            prev_param,
+            yield_value,
+            experiment_dir,
+            config,
+            obj_func,
+        )
 
     def predict(
         self,
@@ -118,8 +143,14 @@ class OptimizerSQSnobFit(OptimizerABC):
         experiment_dir: str,
         config: dict[str, Any],
         obj_func: Optional[Callable[..., float]] = None,
-    ) -> list[Any]:
+    ) -> Any:
         """Find the desired optimum of the provided objective function.
+
+        .. note::
+
+            **Behavior Note:** This method operates with an internal optimization
+            loop, not a one-call-at-a-time approach. For a unified behavioral
+            interface, please use :func:`cyrxnopt.utilities.predict_server`.
 
         :param prev_param: Parameters provided from the previous prediction,
                            provide an empty list for the first call
@@ -130,12 +161,23 @@ class OptimizerSQSnobFit(OptimizerABC):
         :type experiment_dir: str
         :param config: CyRxnOpt-level config for the optimizer
         :type config: dict[str, Any]
-        :param obj_func: Objective function to optimize, defaults to None
-        :type obj_func: Optional[Callable[..., float]], optional
+        :param obj_func: Objective function to optimize, defaults to None. Due
+            to the alternative behavior of this method, this is *required*.
+        :type obj_func: Optional[Callable[..., float]]
 
         :returns: The next suggested reaction to perform
-        :rtype: list[Any]
+        :rtype: `SQCommon.Result
+            <https://github.com/scikit-quant/scikit-quant/blob/master/opt/common/python/SQCommon/_result.py#L6>`__
         """
+
+        if obj_func is None:
+            raise RuntimeError(
+                (
+                    "Objective function is required for this implementation of "
+                    "SQSnobFit (SNOBFIT), as it does not support "
+                    "one-call-at-a-time approach."
+                )
+            )
 
         self._import_deps()
 
@@ -170,7 +212,6 @@ class OptimizerSQSnobFit(OptimizerABC):
 
         result.history = history
 
-        # TODO: This is returning a result object, not the next suggested params
         return result
 
     def _import_deps(self) -> None:

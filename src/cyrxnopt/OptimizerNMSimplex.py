@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sys
 from collections.abc import Callable
 from typing import Any, Optional
 
@@ -25,6 +26,8 @@ class OptimizerNMSimplex(OptimizerABC):
 
         super().__init__(venv)
 
+        self._results_filename = "results.csv"
+
     def get_config(self) -> list[dict[str, Any]]:
         """Gets the configuration options available for this optimizer.
 
@@ -39,24 +42,32 @@ class OptimizerNMSimplex(OptimizerABC):
 
         config: list[dict[str, Any]] = [
             {
-                "name": "direction",
-                "type": "str",
-                "value": ["min", "max"],
-            },
-            {
                 "name": "continuous_feature_names",
-                "type": "list",
+                "type": "list[str]",
                 "value": [],
             },
             {
                 "name": "continuous_feature_bounds",
-                "type": "list[list]",
-                "value": [[]],
+                "type": "list[list[float]]",
+                "value": [],
+            },
+            {
+                # Not used for this algorithm, but kept for compatibility with
+                # the standard config schema
+                "name": "continuous_feature_resolutions",
+                "type": "list[float]",
+                "value": [],
             },
             {
                 "name": "budget",
                 "type": "int",
                 "value": 100,
+                "range": [1, sys.maxsize],
+            },
+            {
+                "name": "direction",
+                "type": "str",
+                "value": ["min", "max"],
             },
             {
                 "name": "param_init",
@@ -96,9 +107,14 @@ class OptimizerNMSimplex(OptimizerABC):
 
         self._import_deps()
 
-        # TODO: config validation should be performed
+        # continuous_feature_resolution not needed for this algorithm, so ignore
+        # it and fill in with placeholder for validation
+        if "continuous_feature_resolutions" not in config:
+            config["continuous_feature_resolutions"] = 0
 
-        output_file = os.path.join(experiment_dir, "config.json")
+        self._validate_config(config)
+
+        output_file = os.path.join(experiment_dir, self._config_filename)
 
         # Write the configuration to a file for later use
         with open(output_file, "w") as fout:
@@ -114,11 +130,22 @@ class OptimizerNMSimplex(OptimizerABC):
     ) -> list[Any]:
         """No training step for this algorithm.
 
+        .. note::
+
+            **Behavior Note:** If an objective function is provided, it will be
+            called once with an empty list to indicate that training is not
+            needed.
+
         :returns: List will always be empty.
         :rtype: list[Any]
         """
-
-        return []
+        return super().train(
+            prev_param,
+            yield_value,
+            experiment_dir,
+            config,
+            obj_func,
+        )
 
     def predict(
         self,
@@ -127,8 +154,14 @@ class OptimizerNMSimplex(OptimizerABC):
         experiment_dir: str,
         config: dict[str, Any],
         obj_func: Optional[Callable[..., float]] = None,
-    ) -> list[Any]:
+    ) -> Any:
         """Find the desired optimum of the provided objective function.
+
+        .. note::
+
+            **Behavior Note:** This method operates with an internal optimization
+            loop, not a one-call-at-a-time approach. For a unified behavioral
+            interface, please use :func:`cyrxnopt.utilities.predict_server`.
 
         :param prev_param: Parameters provided from the previous prediction,
                            provide an empty list for the first call
@@ -139,18 +172,25 @@ class OptimizerNMSimplex(OptimizerABC):
         :type experiment_dir: str
         :param config: CyRxnOpt-level config for the optimizer
         :type config: dict[str, Any]
-        :param obj_func: Objective function to optimize, defaults to None
-        :type obj_func: Optional[Callable[..., float]], optional
+        :param obj_func: Objective function to optimize, defaults to None. Due
+            to the alternative behavior of this method, this is *required*.
+        :type obj_func: Optional[Callable[..., float]]
 
-        :returns: The next suggested reaction to perform
-        :rtype: list[Any]
+        :returns: Optimization result object after the optimization has completed.
+        :rtype: `scipy.optimize.OptimizeResult
+            <https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult>`__
         """
 
-        self._import_deps()
+        if obj_func is None:
+            raise RuntimeError(
+                (
+                    "Objective function is required for this implementation of "
+                    "Nelder-Mead Simplex, as it does not support "
+                    "one-call-at-a-time approach."
+                )
+            )
 
-        # Load the config file
-        # with open(os.path.join(experiment_dir, "config.json")) as fout:
-        #     config = json.load(fout)
+        self._import_deps()
 
         # Convert initial parameters to tuple
         param_init = tuple(config["param_init"])
@@ -178,7 +218,7 @@ class OptimizerNMSimplex(OptimizerABC):
         )
 
         raw_results: list = []
-        with open(os.path.join(experiment_dir, "results.csv")) as fin:
+        with open(os.path.join(experiment_dir, self._results_filename)) as fin:
             for row in fin.readlines():
                 row_list = row.split(",")
                 row_list_float = [float(x) for x in row_list]
@@ -186,7 +226,6 @@ class OptimizerNMSimplex(OptimizerABC):
 
         results.raw_results = raw_results
 
-        # TODO: This is returning a result object, not the next suggested params
         return results
 
     def _create_writer(self, experiment_dir: str) -> Callable[..., None]:
@@ -215,8 +254,9 @@ class OptimizerNMSimplex(OptimizerABC):
             :type intermediate_result: scipy.optimize.OptimizeResult.OptimizeResult
             """
 
-            # TODO: Make this file name a constant for the package
-            results_path = os.path.join(str(experiment_dir), "results.csv")
+            results_path = os.path.join(
+                str(experiment_dir), self._results_filename
+            )
 
             # Create results list with parameters before results.
             # This will be the next row in the results file

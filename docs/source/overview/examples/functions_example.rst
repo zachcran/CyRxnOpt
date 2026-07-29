@@ -1,7 +1,8 @@
 .. _functions_example:
 
-Functions Example
-=================
+###################
+ Functions Example
+###################
 
 .. todo::
 

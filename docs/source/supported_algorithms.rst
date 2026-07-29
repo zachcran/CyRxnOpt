@@ -1,7 +1,8 @@
 .. _supported-algorithms:
 
-Supported Algorithms
-====================
+######################
+ Supported Algorithms
+######################
 
 CyRxnOpt supports a variety of state-of-the-art optimization algorithms, ranging
 from traditional methods to modern machine learning-driven approaches. These
@@ -11,8 +12,9 @@ and global search strategies, and single- or multi-objective decision-making.
 Below are sections briefly describing each supported algorithm, along with the
 :term:`CyRxnOpt ID` associated with each method in CyRxnOpt.
 
-AMLRO
------
+*******
+ AMLRO
+*******
 
 :term:`CyRxnOpt ID`: ``amlro``
 
@@ -26,12 +28,13 @@ with directions (minimization or maximization), and user feedback loops.
   planned, and the project will be hosted on GitHub (expected link: *TBA*).
 
 References
-~~~~~~~~~~
+==========
 
 .. [amlro] Manuscript in preparation.
 
-EDBO+
------
+*******
+ EDBO+
+*******
 
 :term:`CyRxnOpt ID`: ``edbop``
 
@@ -44,8 +47,30 @@ identify new experiments that are most informative. EDBO+ has been successfully
 applied to **global, multi-objective optimization** of reaction yields,
 selectivity, and sustainability metrics.
 
+Compatibility
+=============
+
+If on Linux, it is likely that you will run into an error with the execstack
+when running run_client with the edbop optimizer if you have glibc >=2.40.
+[pytorchcpuissue]_
+
+We were able to resolve this by running the following commands manually after
+`cyrxnopt install edbop` completed:
+
+.. code-block:: bash
+
+    # Find the problematic libtorch_cpu.so path in your venv_edbop created from
+    # running 'cyrxnopt install edbop' the first time
+    find <path_to_venv_edbop> -name \*.so -print | grep "libtorch_cpu.so"
+
+    # Reset the execstack to fix the issue
+    # Solution from: https://github.com/conda-forge/pytorch-cpu-feedstock/issues/350#issuecomment-4712140412
+    # Note: You may need to install or enable patchelf first
+    patchelf --clear-execstack
+    <path>/<to>/libtorch_cpu.so
+
 References
-~~~~~~~~~~
+==========
 
 .. [shields2021] Shields, B. J.; Stevens, J.; Li, J.; Parasram, M.; Damani, F.;
     Alvarado, J. I. M.; Janey, J. M.; Adams, R. P.; Doyle, A. G. Bayesian
@@ -59,8 +84,12 @@ References
     Optimization. *J. Am. Chem. Soc.* **2022**, *144* (43), 19999--20007. DOI:
     `10.1021/jacs.2c08592 <https://doi.org/10.1021/jacs.2c08592>`__.
 
-Nelder-Mead Simplex
--------------------
+.. [pytorchcpuissue]
+    https://github.com/conda-forge/pytorch-cpu-feedstock/issues/350
+
+*********************
+ Nelder-Mead Simplex
+*********************
 
 :term:`CyRxnOpt ID`: ``nmsimplex``
 
@@ -75,14 +104,27 @@ regions with a single optimum, noisy surfaces or those with many local optima
 may converge to a local optimum rather than the desired global solution.
 
 References
-~~~~~~~~~~
+==========
 
 .. [nelder1965] Nelder, J. A.; Mead, R. A Simplex Method for Function
     Minimization. *The Computer Journal* **1965**, *7* (4), 308--313. DOI:
     `10.1093/comjnl/7.4.308 <https://doi.org/10.1093/comjnl/7.4.308>`__.
 
-SQSnobFit
----------
+********
+ Random
+********
+
+:term:`CyRxnOpt ID`: ``random``
+
+A random sampling optimizer has been provided to use as a baseline comparison
+for other optimization algorithms in situations like performance benchmarking.
+This algorithm samples from a uniform distribution of the search space and
+supports categorical variables. This optimizer is implemented using only
+standard library functions and has no third-party dependencies.
+
+***********
+ SQSnobFit
+***********
 
 :term:`CyRxnOpt ID`: ``sqsnobfit``
 
@@ -94,7 +136,7 @@ functions. It combines local quadratic model fitting with global
 space-partitioning to balance **exploration and exploitation**.
 
 References
-~~~~~~~~~~
+==========
 
 .. [huyer2008] Huyer, W.; Neumaier, A. SNOBFIT -- Stable Noisy Optimization by
     Branch and Fit. *ACM Transactions on Mathematical Software* **2008**, *35*

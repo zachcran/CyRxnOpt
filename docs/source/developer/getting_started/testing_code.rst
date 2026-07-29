@@ -1,7 +1,8 @@
 .. _testing_code:
 
-Testing Code
-============
+##############
+ Testing Code
+##############
 
 .. todo:: Explain how to run tests.
 

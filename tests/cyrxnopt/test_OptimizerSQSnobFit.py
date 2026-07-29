@@ -44,7 +44,7 @@ def test_set_config_creates_correct_config(venv_sqsnobfit, tmp_path) -> None:
 
     opt = OptimizerSQSnobFit(venv_sqsnobfit)
 
-    expected_config_path = tmp_path / "recent_config.json"
+    expected_config_path = tmp_path / "config.json"
 
     config = {
         "continuous_feature_names": ["f1", "f2"],

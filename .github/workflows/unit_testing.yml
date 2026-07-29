@@ -41,11 +41,17 @@ jobs:
       matrix:
         platform: ${{ fromJSON(needs.define_matrix.outputs.platforms) }}
         python: ${{ fromJSON(needs.define_matrix.outputs.python) }}
+        tox_args:
+          [
+            'run -- -x -m "not individual" -k "not Optimizer"',
+            'run -- -x -m "not individual" -k "Optimizer"',
+          ]
+
     uses: RxnRover/.github/.github/workflows/python_unit_testing_tox_main.yml@main
     with:
       platform: ${{ matrix.platform }}
       python: ${{ matrix.python }}
-      tox_args: 'run -- -m "not individual"'
+      tox_args: ${{ matrix.tox_args }}
 
   individually_run_tests:
     needs: [define_matrix, unit_testing]
@@ -55,8 +61,8 @@ jobs:
         python: ${{ fromJSON(needs.define_matrix.outputs.python) }}
         tox_args:
           [
-            "run -- tests/cyrxnopt/test_NestedVenv.py::test_pip_install_numpy_first_of_two_venvs",
-            "run -- tests/cyrxnopt/test_NestedVenv.py::test_pip_install_numpy_two_versions",
+            "run -- -x tests/cyrxnopt/test_NestedVenv.py::test_pip_install_numpy_first_of_two_venvs",
+            "run -- -x tests/cyrxnopt/test_NestedVenv.py::test_pip_install_numpy_two_versions",
           ]
     uses: RxnRover/.github/.github/workflows/python_unit_testing_tox_main.yml@main
     with:

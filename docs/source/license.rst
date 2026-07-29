@@ -1,6 +1,7 @@
 .. _license:
 
-License
-=======
+#########
+ License
+#########
 
 .. include:: ../../LICENSE.txt

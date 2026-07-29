@@ -1,7 +1,8 @@
 .. _cli_example:
 
-Command Line Example
-====================
+######################
+ Command Line Example
+######################
 
 .. todo::
 

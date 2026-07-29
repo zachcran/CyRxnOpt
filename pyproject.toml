@@ -1,21 +1,98 @@
 [build-system]
-# AVOID CHANGING REQUIRES: IT WILL BE UPDATED BY PYSCAFFOLD!
-requires = ["setuptools>=46.1.0", "setuptools_scm[toml]>=5"]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools_scm]
-# For smarter version schemes and other configuration options,
-# check out https://github.com/pypa/setuptools_scm
-version_scheme = "no-guess-dev"
-
-[tool.pytest.ini_options]
-# Enable log display during test runs
-# See: https://docs.pytest.org/en/latest/how-to/logging.html#live-logs
-log_cli = true
-addopts = "--strict-markers"
-markers = [
-    "individual: Marks tests that need to run in an individual pytest run"
+[project]
+name = "cyrxnopt"
+description = "Add a short description here!"
+authors = [
+    { name = "dulithaprasanna", email = "dulithaprasanna@gmail.com" },
+    { name = "zachcran", email = "zachcran@iastate.edu" },
 ]
+maintainers = [{ name = "zachcran", email = "zachcran@iastate.edu" }]
+dependencies = ["virtualenv", "numpy", "joblib", "pandas", "zmq"]
+
+dynamic = ["version"]
+# Python 3.9 is the only version that worked for all 4 original optimizers.
+# This can and should change in the future.
+requires-python = ">=3.9, <3.10"
+license = "MIT"
+license-files = ["LICENSE.txt"]
+readme = { file = "README.rst", content-type = "text/x-rst" }
+keywords = [
+    "reaction optimization",
+    "chemistry",
+    "chemical engineering",
+    "bayesian optimization",
+    "black-box optimization",
+    "machine learning",
+    "process optimization",
+    "experiment design",
+    "self-driving lab",
+    "automation",
+]
+
+classifiers = [
+    # TODO: Remove "Private :: Do Not Upload" classifier when ready to publish!
+    "Private :: Do Not Upload",
+
+    "Development Status :: 4 - Beta",
+    "Natural Language :: English",
+    "Typing :: Typed",
+
+    # Intended audience tags and other information about what this project is
+    "Intended Audience :: Science/Research",
+    "Environment :: Console",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+
+    # Supported Python versions and operating systems
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11"
+    # Untested, but likely works
+    # "Operating System :: MacOS :: MacOS X"
+]
+
+[project.urls]
+Documentation = "https://RxnRover.github.io/CyRxnOpt"
+Source = "https://github.com/RxnRover/CyRxnOpt"
+Tracker = "https://github.com/RxnRover/CyRxnOpt/issues"
+Download = "https://github.com/RxnRover/CyRxnOpt/archive/refs/heads/main.zip"
+Changelog = "https://github.com/RxnRover/CyRxnOpt/releases/latest"
+
+[project.scripts]
+cyrxnopt = "cyrxnopt.apps.cyrxnopt:run"
+
+# Install these optional development dependencies with pip's --group flag while
+# in the project root directory.
+# Example: pip install --group dev
+[dependency-groups]
+docs = ["sphinx>=3.2.1", "sphinx_rtd_theme"]
+test = [
+    "setuptools",
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
+    "GitPython",    # To clone functioning version of EDBO+
+]
+dev = [
+    "tox",
+    "pre-commit",
+    { include-group = "docs" },
+    { include-group = "test" },
+]
+
+[tool.setuptools_scm]
+# For more options, see https://github.com/pypa/setuptools_scm
+version_scheme = "no-guess-dev"
 
 [tool.black]
 line-length = 80
@@ -28,6 +105,19 @@ profile = "black"
 known_first_party = "cyrxnopt"
 multi_line_output = 3
 line_length = 80
+
+[tool.pytest.ini_options]
+# Enable log display during test runs with --strict-markers
+# See: https://docs.pytest.org/en/latest/how-to/logging.html#live-logs
+addopts = "--cov cyrxnopt --cov-report term-missing --verbose --strict-markers"
+norecursedirs = "dist build .tox"
+testpaths = ["tests"]
+log_cli = true
+
+# Use pytest markers to select/deselect specific tests
+markers = [
+    "individual: Marks tests that need to run in an individual pytest run (deselect with '-m \"not individual\"'",
+]
 
 [tool.coverage.run]
 branch = true
@@ -59,13 +149,7 @@ exclude_lines = [
 disallow_untyped_defs = true
 # Any changes to exclude here need to be made in .pre-commit-config.yaml, too!
 # This exclude list doesn't work because of the way pre-commit invokes mypy
-exclude = [
-    '^setup.py$',
-    '^build',
-    '^venv',
-    '^docs',
-    '^tests'
-]
+exclude = ['^setup.py$', '^build', '^venv', '^docs', '^tests']
 
 [[tool.mypy.overrides]]
 module = "cyrxnopt.*"

@@ -1,12 +1,14 @@
 .. _project_structure:
 
-Project Structure
-=================
+###################
+ Project Structure
+###################
 
 .. todo:: Fill in more detail and explain meanings of files and directories
 
-Directories
------------
+*************
+ Directories
+*************
 
 .. todo:: Update this tree once testing structure is sorted out.
 
@@ -26,8 +28,9 @@ Directories
 
     # Pruned from `tree -d -L 2 --gitignore`
 
-Notable Files
--------------
+***************
+ Notable Files
+***************
 
 ::
 

@@ -1,14 +1,17 @@
-CyRxnOpt
-========
+##########
+ CyRxnOpt
+##########
 
 This is the documentation of the **cyrxnopt** package.
 
-Contents
---------
+**********
+ Contents
+**********
 
 .. toctree::
     :maxdepth: 1
 
+     Quick Start <readme>
      Overview <overview/index>
      Supported Algorithms <supported_algorithms>
      Contributions & Help <contributing>
@@ -18,8 +21,9 @@ Contents
      Authors <authors>
      Glossary <glossary>
 
-Indices and tables
-------------------
+********************
+ Indices and tables
+********************
 
 - :ref:`genindex`
 - :ref:`modindex`

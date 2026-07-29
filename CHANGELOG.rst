@@ -1,34 +1,47 @@
-Changelog
-=========
+###########
+ Changelog
+###########
 
-Version 0.3.0
--------------
+All notable changes to this project will be documented in this file.
 
-Breaking Changes
-~~~~~~~~~~~~~~~~
+The format is based on `Keep a Changelog
+<https://keepachangelog.com/en/2.0.0/>`_, and this project adheres to `Semantic
+Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-- ``venv`` argument is now required in all ``OptimizerController.*`` functions.
-- ``venv`` argument of ``set_config``, ``train``, and ``predict`` functions in
-  ``OptimizerController`` was moved to the second position to better group
-  arguments specific to the functions vs those passed to the optimizer class.
-  This also makes all ``OptimizerController`` functions start with the same
-  arguments.
-- ``itr`` argument removed from ``OptimizerABC.train()``
-- Added ``config`` and ``obj_func`` arguments to ``OptimizerABC.train()`` and
-  ``OptimizerABC.predict()``
+*************
+ Unreleased_
+*************
 
-Features
-~~~~~~~~
+- None yet
 
-- Added mypy type checking
-- Added basic software logging
-- Unified optimizer method signatures (this required some reimplementation under
-  the hood for AMLO)
-- Added and updated testing for all optimizers
+*********************
+ 1.0.0_ - 2026-07-28
+*********************
 
-Bug Fixes
-~~~~~~~~~
+Added
+=====
 
-- Fixed incorrect or missing type hints
-- Updated some docstring wording
-- Fixed some incorrect or missing types in docstrings
+- CLI commands as ``cyrxnopt <subcommand>``
+- Unified behavioral interface functions: ``train_server`` and
+  ``predict_server``
+- Initial benchmarking paper optimizers: - AMLRO, EDBO+, Nelder-Mead Simplex,
+  and SQSnobFit - Random sampling optimizer for baseline comparison
+- Major code cleanup (formatting, linting, bug fixes, etc.)
+- Significant docstring and documentation additions
+
+Changed
+=======
+
+- Updated testing for all optimizers
+
+.. Reference links
+
+.. _1.0.0: https://github.com/RxnRover/cyrxnopt/releases/tag/v1.0.0
+
+.. _dulithaprasanna: https://github.com/dulithaprasanna
+
+.. _semver: https://semver.org
+
+.. _unreleased: https://github.com/RxnRover/cyrxnopt/compare/v1.0.0...HEAD
+
+.. _zachcran: https://github.com/zachcran

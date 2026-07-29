@@ -92,7 +92,6 @@ def validate_required_configs(config_desc: list[dict[str, Any]]) -> None:
     # Check for required keys that have no variations
     required: list[dict[str, Any]] = [
         {"name": "budget", "type": "int"},
-        {"name": "direction", "type": "str"},
     ]
 
     for req_desc in required:
@@ -104,7 +103,7 @@ def validate_required_configs(config_desc: list[dict[str, Any]]) -> None:
 
             assert description["type"] == req_desc["type"], (
                 f"Type for required \"{req_desc['name']}\" config descriptor "
-                f"must be \"{req_desc['type']}\""
+                f"must be \"{req_desc['type']}\", but was \"{description['type']}\"."
             )
 
             # Multiple value types are accepted for some "type" values
@@ -150,6 +149,19 @@ def validate_required_configs(config_desc: list[dict[str, Any]]) -> None:
                 "name": "categorical_feature_values",
                 "type": "list[list[str]]",
                 "value": [],
+            },
+        ],
+        # Directions per objective
+        [
+            {
+                "name": "direction",
+                "type": "str",
+                "value": ["min", "max"],
+            },
+            {
+                "name": "direction",
+                "type": "list[str]",
+                "value": ["min"],
             },
         ],
     ]

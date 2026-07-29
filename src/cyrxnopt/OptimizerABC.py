@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from cyrxnopt.NestedVenv import NestedVenv
+from cyrxnopt.VenvWorker import VenvWorker
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,9 @@ class OptimizerABC(ABC):
 
         self._imports: dict[str, Any] = {}  # Populated in self._import_deps()
         self.__venv = venv
+        self.venv_worker = VenvWorker(venv.prefix)
+
+        self._config_filename = "config.json"
 
     def check_install(self) -> bool:
         """Check if an installation for this optimizer exists or not.
@@ -69,11 +73,9 @@ class OptimizerABC(ABC):
         for package in self._packages:
             # Install from local path if one is given
             if package in local_paths.keys():
-                self.__venv.pip_install_e(
-                    Path(local_paths[package]), package_name=package
-                )
+                self.venv_worker.pip_install_e(Path(local_paths[package]))
             else:
-                self.__venv.pip_install(package)
+                self.venv_worker.pip_install(package)
 
         # Import the packages after they were installed
         self._import_deps()
@@ -113,16 +115,13 @@ class OptimizerABC(ABC):
         - "description" is an optional description of the purpose of a config
           option, along with any caveats that may come with it.
 
-        .. TODO::
+        .. note::
 
-           Think about how to define number bounds in only one direction,
-           like saying "this integer must be >0 or >=0.
-
-        .. TODO::
-
-           Write a page in the documentation describing this, as well as
-           expected mappings to traditional user interface widgets, like text
-           inputs, combo boxes, and number sliders.
+           For number bounds that are only in one direction, such as >0 or <=0,
+           define a "range" using typical max/min values of the data type as
+           appropriate, a very large/small number, or define a reasonable bound
+           for the specific application. For example, >0 on an integer could be
+           [1, sys.maxsize], or <=0 could be [-sys.maxsize + 1, 0]
         """
 
         pass
@@ -156,6 +155,9 @@ class OptimizerABC(ABC):
     ) -> list[Any]:
         """Abstract optimizer training function.
 
+        If an optimizer does not support/need training, the default behavior
+        returning an empty list can be used.
+
         :param prev_param: Parameters provided from the previous prediction or
                            training step.
         :type prev_param: list[Any]
@@ -172,8 +174,13 @@ class OptimizerABC(ABC):
         :returns: The next suggested reaction to perform
         :rtype: list[Any]
         """
+        # If an objective function is provided, assume that the user is trying
+        # to train this algorithm and send a signal that there is no training
+        # to be done.
+        if obj_func is not None:
+            obj_func([])
 
-        pass
+        return []
 
     @abstractmethod
     def predict(
@@ -183,7 +190,7 @@ class OptimizerABC(ABC):
         experiment_dir: str,
         config: dict[str, Any],
         obj_func: Optional[Callable] = None,
-    ) -> list[Any]:
+    ) -> Any:
         """Abstract optimizer prediction function.
 
         :param prev_param: Previous suggested reaction conditions
@@ -197,8 +204,10 @@ class OptimizerABC(ABC):
         :param obj_func: Objective function to optimize, defaults to None
         :type obj_func: Optional[Callable], optional
 
-        :returns: The next suggested conditions to perform
-        :rtype: list[Any]
+        :returns: The results of the prediction. Check function documentation
+            for potential behavioral notes and specific return values of each
+            optimization class.
+        :rtype: Any
         """
 
         pass

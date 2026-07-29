@@ -1,6 +1,7 @@
 .. _architecture:
 
-Architecture Overview
-=====================
+#######################
+ Architecture Overview
+#######################
 
 .. todo:: write summary of code architecture

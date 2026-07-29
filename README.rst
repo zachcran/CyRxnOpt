@@ -54,9 +54,25 @@ workflows.
 
 .. _cyrxnopt_overview_install:
 
-************************
- Installation and Usage
-************************
+**************
+ Installation
+**************
+
+Prerequisites
+=============
+
+- Python 3.9 to operate with all supported optimizers. Some algorithms may
+  function on higher Python versions as well.
+- Project dependencies, as well as other project details, can be found in the
+  ``pyproject.toml`` file's ``dependencies`` list of the ``[project]`` section,
+  typically automatically installed with the package.
+- Optional dependency groups for development-related activities like building
+  documentation and running tests can be found in the ``[dependency-groups]``
+  section of ``pyproject.toml``, installed with ``pip install --group
+  <group_name>``.
+
+Installation
+============
 
 CyRxnOpt is a Python-based library available for installation from *PyPI* using
 ``pip``:
@@ -65,8 +81,22 @@ CyRxnOpt is a Python-based library available for installation from *PyPI* using
 
     pip install cyrxnopt
 
+Or manually inside the cloned repository with:
+
+.. code-block:: bash
+
+    pip install .
+
 Further instructions can be found in `the documentation
 <https://rxnrover.github.io/CyRxnOpt/overview/installation.html>`__.
+
+*******
+ Usage
+*******
+
+CyRxnOpt provides the ``cyrxnopt`` command with a collection of subcommands to
+perform the different steps listed below. After installation, use ``cyrxnopt
+--help`` to learn more about behavior and options available for each command.
 
 .. _cyrxnopt_overview_cli_install:
 
@@ -81,22 +111,25 @@ will be installed in each experiment directory to provide a snap shot of the
 software used at the time of the experiment. Sometimes these duplicate
 installations can become too large, so it is also possible to provide an
 alternative installation location for an algorithm, provided it was put there
-using the following ``install_optimizer`` command so it has the correct
+using the following ``cyrxnopt install`` command so it has the correct
 structure.
 
-An optimizer can be installed using the ``install_optimizer`` command. Using a
+An optimizer can be installed using the ``cyrxnopt install`` command. Using a
 `supported optimizer name
 <https://rxnrover.github.io/CyRxnOpt/supported_algorithms.html>`__, the
-``install_optimizer`` command will install the given optimization algorithm into
+``cyrxnopt install`` command will install the given optimization algorithm into
 a subdirectory to be used by future commands. The following command installs the
 Nelder-Mead Simplex algorithm (NMSimplex), a classic, local optimization
 technique applied in early reaction optimization studies.
 
 .. code-block:: bash
 
+    # Create the directory to use as an example experimental location
+    mkdir ./examples
+
     # Installs the Nelder-Mead Simplex algorithm inside of the directory
     # `./examples/nmsimplex_example`
-    install_optimizer nmsimplex -l ./examples/nmsimplex_example
+    cyrxnopt install nmsimplex -l ./examples/nmsimplex_example
 
 .. _cyrxnopt_overview_cli_config:
 
@@ -110,27 +143,49 @@ reaction parameters that the optimizer should change, parameter boundaries, the
 maximum number of reactions to attempt (budget), and the optimization direction
 (maximize or minimize).
 
-To create a default configuration file, use the ``create_config`` command. This
-will create a ``default_config.json`` file at the given experiment directory, in
-this example, ``./examples/nmsimplex_example``. Note that this is different than
-where we installed the algorithm! One algorithm installation can typically be
-used for many different experiments.
+To create a default configuration file, use the ``cyrxnopt config-init``
+command. This will create a default ``config.json`` file at the given experiment
+directory, in this example, ``./examples/nmsimplex_example``.
 
 .. code-block:: bash
 
-    create_config nmsimplex -l ./examples/nmsimplex_example
+    cyrxnopt config-init nmsimplex -l ./examples/nmsimplex_example
 
-Let's say we make a copy of ``default_config.json`` at
+Let's say we make a copy of ``config.json`` at
 ``./examples/nmsimplex_example/my_config.json`` and change some options in the
-file. We then use the ``configure_optimizer`` command to configure NMSimplex for
-our experiment based on the options in the modified ``my_config.json`` file.
+file:
+
+.. code-block:: json
+
+    {
+        "continuous_feature_names": [
+            "f1", "f2"
+        ],
+        "continuous_feature_bounds": [
+            [0, 10], [10, 80]
+        ],
+        "continuous_feature_resolutions": [
+            1, 5
+        ],
+        "budget": 100,
+        "direction": "min",
+        "param_init": [2, 30],
+        "xatol": 1e-08,
+        "display": false,
+        "server": false
+    }
+
+We then use the ``cyrxnopt config`` command to configure NMSimplex for our
+experiment based on the options in the modified ``my_config.json`` file.
 
 .. code-block:: bash
 
+    # If not already there
     cd ./examples/nmsimplex_example
-    configure_optimizer nmsimplex -c my_config.json
 
-The behavior of ``configure_optimizer`` will vary per optimizer being used. Some
+    cyrxnopt config nmsimplex -c my_config.json
+
+The behavior of ``cyrxnopt config`` will vary per optimizer being used. Some
 optimizers require additional files that are created here, but for NMSimplex the
 formatting is simply checked to make sure the settings can be properly read
 during usage.
@@ -140,10 +195,10 @@ during usage.
 Training an Optimizer
 =====================
 
-Once the optimizer is configured, if training is needed, the ``train_optimizer``
+Once the optimizer is configured, if training is needed, the ``cyrxnopt train``
 command can be run for interactive training. A default of 20 training steps are
 used, which can be changed with the ``-t`` flag. This is not needed for the
-NMSimplex algorithm, resulting in a no-op if ``train_optimizer`` is called.
+NMSimplex algorithm, resulting in a no-op if ``cyrxnopt train`` is called.
 
 .. code-block:: bash
 
@@ -151,15 +206,16 @@ NMSimplex algorithm, resulting in a no-op if ``train_optimizer`` is called.
     cd ./examples/nmsimplex_example
 
     # Begin training loop
-    train_optimizer nmsimplex -c my_config.json -t 20
+    # Implicitly uses the 'config.json' created from 'cyrxnopt config' command above
+    cyrxnopt train nmsimplex -t 20
 
 .. _cyrxnopt_overview_cli_prediction:
 
 Optimizing a Function
 =====================
 
-Once trained, the interactive optimization loop can be run with
-``start_optimization``.
+Once trained, the interactive optimization loop can be run with ``cyrxnopt
+predict``.
 
 .. code-block:: bash
 
@@ -167,7 +223,8 @@ Once trained, the interactive optimization loop can be run with
     cd ./examples/nmsimplex_example
 
     # Begin optimization loop
-    start_optimization nmsimplex -c my_config.json
+    # Implicitly uses the 'config.json' created from 'cyrxnopt config' command above
+    cyrxnopt predict nmsimplex
 
 ***********
  API Usage
