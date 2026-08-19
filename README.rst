@@ -10,7 +10,7 @@
     :alt: ChemRxiv Preprint DOI
     :target: https://doi.org/10.26434/chemrxiv.15001645/v1
 
-.. image:: https://img.sheilds.io/badge/DOE_CODE-#1b6688
+.. image:: https://img.sheilds.io/badge/DOE_CODE-1B6688
    :alt: DOE CODE DOI
    :target: https://doi.org/10.11578/dc.20251119.1
 
