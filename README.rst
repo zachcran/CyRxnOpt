@@ -10,6 +10,10 @@
     :alt: ChemRxiv Preprint DOI
     :target: https://doi.org/10.26434/chemrxiv.15001645/v1
 
+.. image:: https://img.sheilds.io/badge/DOE_CODE-1b6688
+   :alt: DOE CODE DOI
+   :target: https://doi.org/10.11578/dc.20251119.1
+
 .. image:: https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold
     :alt: Project generated with PyScaffold
     :target: https://pyscaffold.org/
